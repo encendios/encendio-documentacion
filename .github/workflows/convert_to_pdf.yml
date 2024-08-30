@@ -24,10 +24,10 @@ jobs:
           pip install nbconvert
           pip install jupyter
 
-      - name: Install Pandoc
+      - name: Install Pandoc and TeX Live
         run: |
           sudo apt-get update
-          sudo apt-get install -y pandoc
+          sudo apt-get install -y pandoc texlive-xetex texlive-fonts-recommended texlive-generic-recommended
 
       - name: Convert IPYNB to PDF
         run: |
