@@ -3,36 +3,41 @@ name: Convert IPYNB to PDF
 on:
   push:
     branches:
-      - main 
+      - all
 
 jobs:
   convert_notebooks_to_pdf:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Check out the repository
-      uses: actions/checkout@v3
+      - name: Check out the repository
+        uses: actions/checkout@v3
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.x' 
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.1"
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install nbconvert
-        pip install jupyter
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install nbconvert
+          pip install jupyter
 
-    - name: Convert IPYNB to PDF
-      run: |
-        mkdir -p pdfs
-        for notebook in *.ipynb; do
-          jupyter nbconvert --to pdf "$notebook" --output-dir=pdfs
-        done
+      - name: Install Pandoc
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y pandoc
 
-    - name: Upload PDFs as artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        name: pdfs
-        path: pdfs/*.pdf
+      - name: Convert IPYNB to PDF
+        run: |
+          mkdir -p pdfs
+          for notebook in *.ipynb; do
+            jupyter nbconvert --to pdf "$notebook" --output-dir=pdfs
+          done
+
+      - name: Upload PDFs as artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: pdfs
+          path: pdfs/*.pdf
